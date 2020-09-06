@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <title>Document</title>
+  </head>
+
+  <style type="text/css">
+    body {
+    font-family: "Lato", sans-serif;
+}
+
+
+
+.main-head{
+    height: 150px;
+    background: #FFF;
+   
+}
+
+.sidenav {
+    height: 100%;
+    background-color: #000;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+
+.main {
+    padding: 0px 10px;
+    padding-top:20%;
+}
+
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+}
+
+@media screen and (max-width: 450px) {
+    .login-form{
+        margin-top: 10%;
+    }
+
+    .register-form{
+        margin-top: 10%;
+    }
+}
+
+@media screen and (min-width: 768px){
+    .main{
+        margin-left: 40%; 
+    }
+
+    .sidenav{
+        width: 30%;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+    }
+
+    .login-form{
+        margin-top: 80%;
+    }
+
+    .register-form{
+        margin-top: 20%;
+    }
+}
+
+
+.login-main-text{
+    margin-top: 20%;
+    padding: 60px;
+    color: #fff;
+}
+
+.login-main-text h2{
+    font-weight: 300;
+}
+
+.btn-black{
+    background-color: #000 !important;
+    color: #fff;
+}
+  </style>
+  <body>
+    <!-- Add two inputs for "phoneNumber" and "code" -->
+    <!-- <input type="tel" id="phoneNumber" />
+    <input type="text" id="code" />
+ -->
+    <!-- Add two buttons to submit the inputs
+    <button id="sign-in-button" onclick="submitPhoneNumberAuth()">
+      SIGN IN WITH PHONE
+    </button>
+    <button id="confirm-code" onclick="submitPhoneNumberAuthCode()">
+      ENTER CODE
+    </button> -->
+
+  
+    <center><div id="recaptcha-container"></div></center>
+
+    <!-- Add the latest firebase dependecies from CDN -->
+    <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-auth.js"></script>
+
+    <script>
+      // Paste the config your copied earlier
+      var firebaseConfig = {
+    apiKey: "AIzaSyD5mIkilaZHivFJuTc2jUOXpLZ73MGqGhk",
+    authDomain: "dequani-95ddd.firebaseapp.com",
+    databaseURL: "https://dequani-95ddd.firebaseio.com",
+    projectId: "dequani-95ddd",
+    storageBucket: "dequani-95ddd.appspot.com",
+    messagingSenderId: "1031452676177",
+    appId: "1:1031452676177:web:ddc72ab3f3402795a42870",
+    measurementId: "G-LVWVL2SPRQ"
+  };
+
+      firebase.initializeApp(firebaseConfig);
+
+      // Create a Recaptcha verifier instance globally
+      // Calls submitPhoneNumberAuth() when the captcha is verified
+
+    //   firebase.auth.RecaptchaVerifier('recaptcha-container_new', {
+  	// 	'size': 'invisible',
+  	// 	callback: function(response) {
+    //         submitPhoneNumberAuth();
+    //       }
+		// });
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+        "recaptcha-container",
+        {
+          size: "normal",
+          callback: function(response) {
+            submitPhoneNumberAuth();
+          }
+        }
+      );
+
+      // This function runs when the 'sign-in-button' is clicked
+      // Takes the value from the 'phoneNumber' input and sends SMS to that phone number
+      function submitPhoneNumberAuth() {
+        var phoneNumber = document.getElementById("phoneNumber").value;
+        var appVerifier = window.recaptchaVerifier;
+        firebase
+          .auth()
+          .signInWithPhoneNumber(phoneNumber, appVerifier)
+          .then(function(confirmationResult) {
+            window.confirmationResult = confirmationResult;
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
+
+      // This function runs when the 'confirm-code' button is clicked
+      // Takes the value from the 'code' input and submits the code to verify the phone number
+      // Return a user object if the authentication was successful, and auth is complete
+      function submitPhoneNumberAuthCode() {
+        var code = document.getElementById("code").value;
+        confirmationResult
+          .confirm(code)
+          .then(function(result) {
+            var user = result.user;
+            console.log(user);
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
+
+      //This function runs everytime the auth state changes. Use to verify if the user is logged in
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          console.log("USER LOGGED IN");
+          $(document).ready(function(){
+
+              $("#show").show();
+
+});
+        } else {
+          // No user is signed in.
+          console.log("USER NOT LOGGED IN");
+        }
+      });
+    </script>
+
+
+
+
+
+    <div class="sidenav col-md-4 col-sm-12">
+         <div class="login-main-text">
+            <h2>Application<br> Login Page</h2>
+            <p>Login or register from here to access.</p>
+         </div>
+      </div>
+      <div class="main">
+         <div class="col-md-8 col-sm-12">
+            
+                <table>
+                  <tr>
+                  
+                    <td>Enter your Mobile Number</td>
+                    <td><input type="tel" id="phoneNumber"  value ="+91"></td>
+                    <td><button  class="btn btn-black"  id="sign-in-button" onclick="submitPhoneNumberAuth()">Send OTP</button></td>
+                 </tr>
+                <tr>
+                  
+                     <td>OTP</td>
+                     <td><input type="text" id="code"></td>
+                     <td><button class="btn btn-secondary" id="confirm-code" ><a href="products.html" >Confirm my OTP</a></button></td>
+                  
+                </tr>
+                  <!-- <div id="recaptcha-container"></div> -->
+                  <tr><td><a href="products.html"><button id="show" class="btn btn-primary" style="display:none">LogIn</button></a></td></tr>
+                  </table>
+               
+         </div>
+      </div>
+
+  </body>
+</html>
