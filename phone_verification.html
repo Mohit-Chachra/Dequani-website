@@ -127,7 +127,7 @@
       // Create a Recaptcha verifier instance globally
       // Calls submitPhoneNumberAuth() when the captcha is verified
 
-    //   firebase.auth.RecaptchaVerifier('recaptcha-container_new', {
+    //   window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
   	// 	'size': 'invisible',
   	// 	callback: function(response) {
     //         submitPhoneNumberAuth();
@@ -156,6 +156,7 @@
           })
           .catch(function(error) {
             console.log(error);
+            console.log("number not send");
           });
       }
 
@@ -215,7 +216,7 @@
                   
                      <td>OTP</td>
                      <td><input type="text" id="code"></td>
-                     <td><button class="btn btn-secondary" id="confirm-code" ><a href="products.html" >Confirm my OTP</a></button></td>
+                     <td><button class="btn btn-secondary" id="confirm-code" ><a href="products.html" onclick="submitPhoneNumberAuthCode()">Confirm my OTP</a></button></td>
                   
                 </tr>
                   <!-- <div id="recaptcha-container"></div> -->
